@@ -5,6 +5,8 @@ import br.com.zgsolucoes.simuladorglosa.repositorios.ItemTabelaRepositorio
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -16,7 +18,7 @@ class GeradorDeCriticas {
 	@Inject
 	ItemTabelaRepositorio itemTabelaRepositorio
 
-	String gere(File arquivo, boolean formatar) {
+	void gere(File arquivo, String nomeArquivo, boolean formatar) {
 		List<Map> dados = []
 		arquivo.readLines().tail().each {
 			Map dado = [:]
@@ -77,21 +79,17 @@ class GeradorDeCriticas {
 			}
 		}
 
-		imprima('arquivo.csv', dados, calcs, critics, formatar)
+		imprima(nomeArquivo, dados, calcs, critics, formatar)
 
 	}
 
-	String imprima(
+	void imprima(
 			String nome,
 			List<Map> dados,
 			List<BigDecimal> calcs,
 			List<BigDecimal> critics,
 			boolean formatar = true
 	) {
-		File file = new File(this.class.classLoader.getResource('gerado').path +nome)
-		if(!file.exists()) {
-			file.createNewFile()
-		}
 		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
 		for (int i =0 ; i< dados.size(); i++) {
 			Map dado = dados[i]
@@ -115,8 +113,8 @@ class GeradorDeCriticas {
 				texto += '\n'
 			}
 		}
-		file.write(texto)
-		return texto
+
+		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
 	}
 
 }

@@ -6,6 +6,8 @@ import jakarta.inject.Inject
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.nio.file.Paths
+
 @MicronautTest
 class SimuladorGlosaSpec extends Specification {
 
@@ -18,15 +20,15 @@ class SimuladorGlosaSpec extends Specification {
 		File arquivo = new File(GeradorDeCriticas.getResource('/arquivo_itens.csv').path)
 
 		when:
-		String arquivoGerado = geradorDeCriticas.gere(arquivo, formatado)
+		geradorDeCriticas.gere(arquivo, nomeArquivo, formatado)
 
 		then:
-		arquivoGerado == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
+		Paths.get('src/main/resources/gerado', nomeArquivo).toFile().text == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
 
 		where:
-		formatado | arquivoEsperado
-		true      | 'gerado_formatado.csv'
-		false     | 'gerado.csv'
+		formatado | nomeArquivo            | arquivoEsperado
+		true      | 'gerado_formatado.csv' | 'esperado_formatado.csv'
+		false     | 'gerado.csv'           | 'esperado.csv'
 	}
 
 }
