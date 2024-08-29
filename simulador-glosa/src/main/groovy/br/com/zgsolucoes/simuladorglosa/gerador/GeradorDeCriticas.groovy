@@ -1,7 +1,7 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
-import br.com.zgsolucoes.simuladorglosa.repositorios.ItemTabelaRepositorio
+import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
@@ -16,7 +16,7 @@ class GeradorDeCriticas {
 	private static final Locale LOCALE = new Locale('pt', 'BR')
 
 	@Inject
-	ItemTabelaRepositorio itemTabelaRepositorio
+	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
 		List<Map> dados = []
