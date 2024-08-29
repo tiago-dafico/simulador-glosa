@@ -10,7 +10,7 @@ import jakarta.persistence.Id
 @CompileStatic
 @EqualsAndHashCode(includeFields = true)
 @ToString(includePackage = false, includeFields = true)
-class ItemTabela {
+class TabelaDePrecos {
 
 	@Id
 	String codigo
