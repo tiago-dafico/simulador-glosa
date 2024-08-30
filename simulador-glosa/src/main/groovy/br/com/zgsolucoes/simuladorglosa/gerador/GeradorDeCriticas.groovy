@@ -99,13 +99,16 @@ class GeradorDeCriticas {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 				texto += dado.codigo
 				texto += ';'
-				texto += ''
+				texto += CURRENCY_FORMAT.format(dado.valor.toString().toBigDecimal())
+				texto += ';'
 				texto += CURRENCY_FORMAT.format(calc)
 				texto += ';'
 				texto += CURRENCY_FORMAT.format(critic)
 				texto += '\n'
 			} else {
 				texto += dado.codigo
+				texto += ';'
+				texto += dado.valor
 				texto += ';'
 				texto += calc
 				texto += ';'
