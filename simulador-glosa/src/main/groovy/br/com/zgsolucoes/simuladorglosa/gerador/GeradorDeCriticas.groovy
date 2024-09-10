@@ -25,22 +25,19 @@ class GeradorDeCriticas {
 	FabricaCalculador fabricaCalculador
 
 	void gereSemFormatar(File arquivo, String nomeArquivo) {
-		gere(arquivo, nomeArquivo) { List<ValorAnalisado> analisados ->
-			ImpressorCSV.imprimir(nomeArquivo, analisados)
-		}
+		List<ValorAnalisado> analisados = gere(arquivo)
+		ImpressorCSV.imprimir(nomeArquivo, analisados)
 	}
 
 	void gereFormatado(File arquivo, String nomeArquivo) {
-		gere(arquivo, nomeArquivo) { List<ValorAnalisado> analisados ->
-			ImpressorCSVFormatado.imprimir(nomeArquivo, analisados)
-		}
+		List<ValorAnalisado> analisados = gere(arquivo)
+		ImpressorCSVFormatado.imprimir(nomeArquivo, analisados)
 	}
 
-	void gere(File arquivo, String nomeArquivo, Closure impressao) {
+	List<ValorAnalisado> gere(File arquivo) {
 		List<ValorFaturado> faturados = LeitorCSV.obterFaturados(arquivo)
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
-		List<ValorAnalisado> analisados = calculeFaturados(faturados, tabelaList)
-		impressao.call(analisados)
+		return calculeFaturados(faturados, tabelaList)
 	}
 
 	List<ValorAnalisado> calculeFaturados(List<ValorFaturado> faturados, List<TabelaDePrecos> tabelas) {
