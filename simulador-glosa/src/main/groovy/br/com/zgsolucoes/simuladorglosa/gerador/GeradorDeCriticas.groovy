@@ -16,8 +16,6 @@ import jakarta.inject.Singleton
 @Singleton
 class GeradorDeCriticas {
 
-	private static final Locale LOCALE = new Locale('pt', 'BR')
-
 	@Inject
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
