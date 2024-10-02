@@ -2,7 +2,6 @@ package br.com.zgsolucoes
 
 import br.com.zgsolucoes.simuladorglosa.gerador.GeradorDeCriticas
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
-import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -11,6 +10,8 @@ import java.nio.file.Paths
 
 @MicronautTest
 class SimuladorGlosaSpec extends Specification {
+
+	private static final PATH_GERADO = 'src/main/resources/gerado'
 
 	@Inject
 	GeradorDeCriticas geradorDeCriticas
@@ -23,11 +24,10 @@ class SimuladorGlosaSpec extends Specification {
 		File arquivo = new File(GeradorDeCriticas.getResource('/arquivo_itens.csv').path)
 
 		when:
-		repositorio.findAll() >> []
-		geradorDeCriticas.gereFormatado(arquivo, nomeArquivo)
+		geradorDeCriticas.gereFormatadoBrl(arquivo, nomeArquivo)
 
 		then:
-		Paths.get('src/main/resources/gerado', nomeArquivo).toFile().text == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
+		Paths.get(PATH_GERADO, nomeArquivo).toFile().text == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
 
 		where:
 		nomeArquivo            | arquivoEsperado
@@ -39,21 +39,14 @@ class SimuladorGlosaSpec extends Specification {
 		File arquivo = new File(GeradorDeCriticas.getResource('/arquivo_itens.csv').path)
 
 		when:
-		repositorio.findAll() >> []
 		geradorDeCriticas.gereSemFormatar(arquivo, nomeArquivo)
 
 		then:
-		Paths.get('src/main/resources/gerado', nomeArquivo).toFile().text == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
+		Paths.get(PATH_GERADO, nomeArquivo).toFile().text == GeradorDeCriticas.getResource('/'.concat(arquivoEsperado)).text
 
 		where:
 		nomeArquivo  | arquivoEsperado
 		'gerado.csv' | 'esperado.csv'
-	}
-
-
-	@MockBean(TabelaDePrecosRepositorio)
-	TabelaDePrecosRepositorio TabelaDePrecosRepositorio() {
-		return Mock(TabelaDePrecosRepositorio)
 	}
 
 }
