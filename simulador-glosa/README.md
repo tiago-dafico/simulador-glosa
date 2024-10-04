@@ -1,21 +1,7 @@
-## Micronaut 4.6.0 Documentation
+## Simulador de Glosa
 
-- [User Guide](https://docs.micronaut.io/4.6.0/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.6.0/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.6.0/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
-
----
-
-- [Shadow Gradle Plugin](https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow)
-- [Micronaut Gradle Plugin documentation](https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/)
-
-## Feature micronaut-aot documentation
-
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
-
-## Feature serialization-jackson documentation
-
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
-
-
+Rode os seguintes comandos pelo terminal, na raiz do projeto:
+```
+crieBanco simulador-glosa
+psql -U postgres -d simulador-glosa -f src/main/resources/create_table.sql
+```
