@@ -70,7 +70,7 @@ class GeradorDeCriticas {
 			BigDecimal calc = calcs[i]
 			BigDecimal critic = critics[i]
 			if (formatar) {
-				formataValoresDoTexto(texto, item, calc, critic)
+				formataValoresDoTexto(textoComFormatacao(texto))
 			} else {
 				textoSemFormatacao(texto, item, calc, critic)
 			}
@@ -79,19 +79,21 @@ class GeradorDeCriticas {
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}
 
-	static String formataValoresDoTexto(String texto, Item item, BigDecimal calc, BigDecimal critic) {
+	static String formataValoresDoTexto(String texto) {
 		final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
+		return CURRENCY_FORMAT.format(texto.toString().toBigDecimal())
+	}
+	static String textoComFormatacao(String texto, Item item, BigDecimal calc, BigDecimal critic) {
 		texto += item.codigo
 		texto += ';'
-		texto += CURRENCY_FORMAT.format(item.valor.toString().toBigDecimal())
+		texto += formataValoresDoTexto(item.valor)
 		texto += ';'
-		texto += CURRENCY_FORMAT.format(calc)
-		texto += ';'
-		texto += CURRENCY_FORMAT.format(critic)
-		texto += '\n'
+		texto +=
+				texto += ';'
+		texto +=
+				texto += '\n'
 		return texto
 	}
-	static String textoComFormatacao(String texto, Item item, BigDecimal calc, BigDecimal critic) {}
 
 	static String textoSemFormatacao(String texto, Item item, BigDecimal calc, BigDecimal critic) {
 		texto += item.codigo
