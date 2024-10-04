@@ -21,15 +21,13 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
-		List<Item> items = []
-		arquivo.readLines().tail().each {
+		List<Item> items = arquivo.readLines().tail().collect {
 			List<String> list = it.tokenize(';')
-			Item item = new Item(
+			return new Item(
 					codigo: list[0],
 					tipo: TipoItem.valueOf(list[1].toUpperCase()),
 					valor: BigDecimal.valueOf(list[2].toLong())
 			)
-			items.add(item)
 		}
 
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
@@ -42,10 +40,10 @@ class GeradorDeCriticas {
 				it.codigo == item.codigo
 			}
 			BigDecimal calc = itemTabela.valor * item.getTipo().getValue()
-			BigDecimal valor = item.valor.toString().toBigDecimal()
+			BigDecimal valor = item.valor
 			BigDecimal critic = calc - valor
 
-			if (item item.codigo.toString().startsWith('4')) {
+			if (item.codigo.startsWith('4') && item) {
 				calc -= 20
 			}
 
@@ -70,7 +68,7 @@ class GeradorDeCriticas {
 			BigDecimal calc = calcs[i]
 			BigDecimal critic = critics[i]
 			if (formatar) {
-				formataValoresDoTexto(textoComFormatacao(texto))
+				textoComFormatacao(texto, item, calc, critic)
 			} else {
 				textoSemFormatacao(texto, item, calc, critic)
 			}
@@ -79,19 +77,19 @@ class GeradorDeCriticas {
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}
 
-	static String formataValoresDoTexto(String texto) {
+	static String formataValoresDoTexto(BigDecimal valor) {
 		final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
-		return CURRENCY_FORMAT.format(texto.toString().toBigDecimal())
+		return CURRENCY_FORMAT.format(valor)
 	}
 	static String textoComFormatacao(String texto, Item item, BigDecimal calc, BigDecimal critic) {
 		texto += item.codigo
 		texto += ';'
 		texto += formataValoresDoTexto(item.valor)
 		texto += ';'
-		texto +=
-				texto += ';'
-		texto +=
-				texto += '\n'
+		texto += formataValoresDoTexto(calc)
+		texto += ';'
+		texto += formataValoresDoTexto(critic)
+		texto += '\n'
 		return texto
 	}
 
