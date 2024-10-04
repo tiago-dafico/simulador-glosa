@@ -1,6 +1,7 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
 import br.com.zgsolucoes.simuladorglosa.dominio.Dado
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemType
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
@@ -22,12 +23,12 @@ class GeradorDeCriticas {
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
 		List<Dado> dados = []
 		arquivo.readLines().tail().each {
-
 			List<String> list = it.tokenize(';')
-			dado['codigo'] = list[0]
-			dado['tipo'] = list[1]
-			dado['valor'] = list[2]
-			Dado dado = new Dado(codigo: list[0], tipo: , valor: list[2])
+			Dado dado = new Dado(
+					codigo: list[0],
+					tipo: ItemType.valueOf(list[1].toUpperCase()),
+					valor: BigDecimal.valueOf(list[2].toLong())
+			)
 			dados.add(dado)
 		}
 
@@ -36,49 +37,20 @@ class GeradorDeCriticas {
 		List<BigDecimal> calcs = []
 		List<BigDecimal> critics = []
 
-		dados.each { Map dado ->
-			if (dado.tipo == 'Procedimento') {
-				TabelaDePrecos itemTabela = tabelaList.find {
-					it.codigo == dado.codigo
-				}
-				BigDecimal calc = itemTabela.valor * 1.55
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				if (dado.codigo.toString().startsWith('4')) {
-					calc -= 20
-				}
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Material') {
-				TabelaDePrecos itemTabela = tabelaList.find {
-					it.codigo == dado.codigo
-				}
-				BigDecimal calc = itemTabela.valor * 1.20
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Medicamento') {
-				TabelaDePrecos itemTabela = tabelaList.find {
-					it.codigo == dado.codigo
-				}
-				BigDecimal calc = itemTabela.valor * 1.30
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Taxa') {
-				TabelaDePrecos itemTabela = tabelaList.find {
-					it.codigo == dado.codigo
-				}
-				BigDecimal calc = itemTabela.valor * 1.15
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else {
-				throw new Exception('Não é de nenhum tipo')
+		dados.each { Dado dado ->
+			TabelaDePrecos itemTabela = tabelaList.find {
+				it.codigo == dado.codigo
 			}
+			BigDecimal calc = itemTabela.valor * dado.getTipo().getValue()
+			BigDecimal valor = dado.valor.toString().toBigDecimal()
+			BigDecimal critic = calc - valor
+
+			if (dado dado.codigo.toString().startsWith('4')) {
+				calc -= 20
+			}
+
+			calcs.add(calc)
+			critics.add(critic)
 		}
 
 		imprima(nomeArquivo, dados, calcs, critics, formatar)
@@ -93,11 +65,11 @@ class GeradorDeCriticas {
 			boolean formatar = true
 	) {
 		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
-		for (int i =0 ; i< dados.size(); i++) {
+		for (int i = 0; i < dados.size(); i++) {
 			Map dado = dados[i]
 			BigDecimal calc = calcs[i]
 			BigDecimal critic = critics[i]
-			if(formatar) {
+			if (formatar) {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 				texto += dado.codigo
 				texto += ';'
@@ -119,7 +91,7 @@ class GeradorDeCriticas {
 			}
 		}
 
-		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
+		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}
 
 }
