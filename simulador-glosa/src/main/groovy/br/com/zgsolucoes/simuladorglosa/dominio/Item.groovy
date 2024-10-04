@@ -1,8 +1,7 @@
 package br.com.zgsolucoes.simuladorglosa.dominio
 
-class Dado {
-
+class Item {
 	String codigo
-	ItemType tipo
+	TipoItem tipo
 	BigDecimal valor
 }

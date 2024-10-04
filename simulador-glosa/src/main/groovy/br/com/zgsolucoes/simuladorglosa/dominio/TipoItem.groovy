@@ -1,6 +1,6 @@
 package br.com.zgsolucoes.simuladorglosa.dominio
 
-enum ItemType {
+enum TipoItem {
 	PROCEDIMENTO('Procedimento', 1.55),
 	MATERIAL('Material', 1.2),
 	MEDICAMENTO('Medicamento', 1.3),
@@ -9,7 +9,7 @@ enum ItemType {
 	String description
 	BigDecimal value
 
-	ItemType(String description, BigDecimal value) {
+	TipoItem(String description, BigDecimal value) {
 		this.description = description
 		this.value = value
 	}
