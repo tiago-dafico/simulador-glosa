@@ -110,9 +110,9 @@ class GeradorDeCriticas {
 				texto += ';'
 				texto += dado.valor
 				texto += ';'
-				texto += calc
+				texto += calc.setScale(2)
 				texto += ';'
-				texto += critic
+				texto += critic.setScale(2)
 				texto += '\n'
 			}
 		}
