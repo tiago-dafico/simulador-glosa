@@ -70,28 +70,38 @@ class GeradorDeCriticas {
 			BigDecimal calc = calcs[i]
 			BigDecimal critic = critics[i]
 			if (formatar) {
-				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
-				texto += dado.codigo
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(dado.valor.toString().toBigDecimal())
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(calc)
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(critic)
-				texto += '\n'
+				formataValoresDoTexto(texto, dado.codigo, calc, critic)
 			} else {
-				texto += dado.codigo
-				texto += ';'
-				texto += dado.valor
-				texto += ';'
-				texto += calc.setScale(2)
-				texto += ';'
-				texto += critic.setScale(2)
-				texto += '\n'
+				textoSemFormatacao(texto, dado.codigo, calc, critic)
 			}
 		}
 
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
+	}
+
+	String formataValoresDoTexto(String texto, Dado dado, BigDecimal calc, BigDecimal critic) {
+		final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
+		texto += dado.codigo
+		texto += ';'
+		texto += CURRENCY_FORMAT.format(dado.valor.toString().toBigDecimal())
+		texto += ';'
+		texto += CURRENCY_FORMAT.format(calc)
+		texto += ';'
+		texto += CURRENCY_FORMAT.format(critic)
+		texto += '\n'
+		return texto
+	}
+
+	String textoSemFormatacao(String texto, Dado dado, BigDecimal calc, BigDecimal critic) {
+		texto += dado.codigo
+		texto += ';'
+		texto += dado.valor
+		texto += ';'
+		texto += calc.setScale(2)
+		texto += ';'
+		texto += critic.setScale(2)
+		texto += '\n'
+		return texto
 	}
 
 }
