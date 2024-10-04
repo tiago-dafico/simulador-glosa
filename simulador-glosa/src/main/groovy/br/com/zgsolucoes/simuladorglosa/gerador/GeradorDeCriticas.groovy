@@ -1,5 +1,6 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
+import br.com.zgsolucoes.simuladorglosa.dominio.Dado
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
@@ -19,13 +20,14 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
-		List<Map> dados = []
+		List<Dado> dados = []
 		arquivo.readLines().tail().each {
-			Map dado = [:]
+
 			List<String> list = it.tokenize(';')
 			dado['codigo'] = list[0]
 			dado['tipo'] = list[1]
 			dado['valor'] = list[2]
+			Dado dado = new Dado(codigo: list[0], tipo: , valor: list[2])
 			dados.add(dado)
 		}
 
