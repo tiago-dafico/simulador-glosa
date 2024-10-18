@@ -1,10 +1,8 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
-import br.com.zgsolucoes.simuladorglosa.CalculadoraMaterial
-import br.com.zgsolucoes.simuladorglosa.CalculadoraMedicamento
-import br.com.zgsolucoes.simuladorglosa.CalculadoraProcedimento
-import br.com.zgsolucoes.simuladorglosa.CalculadoraTaxa
+import br.com.zgsolucoes.simuladorglosa.Calculadora
 import br.com.zgsolucoes.simuladorglosa.Dado
+import br.com.zgsolucoes.simuladorglosa.CalculadoraFactory
 import br.com.zgsolucoes.simuladorglosa.dominio.ResultadoCalculoItem
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.TipoItem
@@ -31,41 +29,16 @@ class GeradorDeCriticas {
         List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
         List<ResultadoCalculoItem> resultados = []
-        List<BigDecimal> critics = []
 
         dados.each { Dado dado ->
-
-            if (dado.tipo == TipoItem.PROCEDIMENTO) {
-                TabelaDePrecos itemTabela = tabelaList.find {
-                    it.codigo == dado.codigo
-                }
-                ResultadoCalculoItem calc = CalculadoraProcedimento.calcular(dado, itemTabela)
-                resultados.add(calc)
-            } else if (dado.tipo == TipoItem.MATERIAL) {
-                TabelaDePrecos itemTabela = tabelaList.find {
-                    it.codigo == dado.codigo
-                }
-                ResultadoCalculoItem calc = CalculadoraMaterial.calcular(dado, itemTabela)
-                resultados.add(calc)
-            } else if (dado.tipo == TipoItem.MEDICAMENTO) {
-                TabelaDePrecos itemTabela = tabelaList.find {
-                    it.codigo == dado.codigo
-                }
-                ResultadoCalculoItem calc = CalculadoraMedicamento.calcular(dado, itemTabela)
-                resultados.add(calc)
-            } else if (dado.tipo == TipoItem.TAXA) {
-                TabelaDePrecos itemTabela = tabelaList.find {
-                    it.codigo == dado.codigo
-                }
-                ResultadoCalculoItem calc = CalculadoraTaxa.calcular(dado, itemTabela)
-                resultados.add(calc)
-            } else {
-                throw new Exception('Não é de nenhum tipo')
+            TabelaDePrecos itemTabela = tabelaList.find {
+                it.codigo == dado.codigo
             }
+            Calculadora calculadora = CalculadoraFactory.getCalculadora(dado.tipo)
+            ResultadoCalculoItem resultadoCalculoItem = calculadora.calcular(dado, itemTabela)
+            resultados.add(resultadoCalculoItem)
         }
-
         imprima(nomeArquivo, dados, resultados, formatar)
-
     }
 
     void imprima(
