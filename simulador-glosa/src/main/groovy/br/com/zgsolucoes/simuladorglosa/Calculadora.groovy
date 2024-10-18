@@ -6,4 +6,6 @@ interface Calculadora {
 
 	BigDecimal calcular(Dado dado, TabelaDePrecos tabelaDePrecos)
 
+	Calculadora getCal
+
 }
