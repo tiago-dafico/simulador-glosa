@@ -9,8 +9,9 @@ class ICalculadoraMedicamento extends ICalculadoraDeCritica {
 		tipoItem == TipoItem.MEDICAMENTO
 	}
 
+
 	@Override
-	BigDecimal calculaTipo(BigDecimal valor) {
-		return valor * INFLATOR
+	BigDecimal getInflator() {
+		return INFLATOR
 	}
 }

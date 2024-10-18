@@ -47,11 +47,12 @@ class GeradorDeCriticas {
 
 		itensFaturados.each { ItemFaturado dado ->
 			ICalculadoraDeCritica calculadora = calculadoras.find { it.deveAplicar(dado.tipo)}
+			// TODO Talvez um intermediário
 			TabelaDePrecos itemTabela = tabelaList.find {
 				it.codigo == dado.codigo
 			}
 
-			BigDecimal calc = calculadora.calculaTipo(ItemTabela.valor)
+			BigDecimal calc = calculadora.calculaTipo(itemTabela)
 			BigDecimal valor = dado.valor.toString().toBigDecimal()
 			BigDecimal critic = calc - valor
 

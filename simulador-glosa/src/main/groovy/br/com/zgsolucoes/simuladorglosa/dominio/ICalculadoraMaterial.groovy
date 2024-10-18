@@ -4,12 +4,11 @@ import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import groovy.transform.Undefined
 
 class ICalculadoraMaterial extends ICalculadoraDeCritica {
-
 	static final BigDecimal INFLATOR = 1.20
 
 	@Override
-	BigDecimal calculaTipo(BigDecimal valor) {
-		return valor * INFLATOR
+	BigDecimal getInflator() {
+		return INFLATOR
 	}
 
 	@Override
