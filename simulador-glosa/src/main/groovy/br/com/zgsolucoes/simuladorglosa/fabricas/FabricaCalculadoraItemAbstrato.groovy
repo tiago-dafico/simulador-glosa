@@ -1,6 +1,7 @@
-package br.com.zgsolucoes.simuladorglosa.servicos.calculadora
+package br.com.zgsolucoes.simuladorglosa.fabricas
 
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
+import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.CalculadoraAbstrataItem
 import groovy.transform.CompileStatic
 import jakarta.inject.Inject
 import jakarta.inject.Singleton

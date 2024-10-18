@@ -2,26 +2,26 @@ package br.com.zgsolucoes.simuladorglosa.gerador
 
 import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
 import br.com.zgsolucoes.simuladorglosa.dominio.ItemFaturado
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemTabela
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
-import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.FabricaCalculadoraItemAbstrato
 import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.CalculadoraAbstrataItem
-import br.com.zgsolucoes.simuladorglosa.servicos.impressora.FabricaImpressoraAbstrato
+import br.com.zgsolucoes.simuladorglosa.fabricas.FabricaCalculadoraItemAbstrato
+import br.com.zgsolucoes.simuladorglosa.fabricas.FabricaImpressoraAbstrato
 import br.com.zgsolucoes.simuladorglosa.servicos.impressora.ImpressoraAbstrata
+import br.com.zgsolucoes.simuladorglosa.servicos.tabela_precos.ServicoTabelaDePrecos
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.text.DecimalFormat
-import java.text.NumberFormat
 
 @Singleton
 class GeradorDeCriticas {
 
 	@Inject
-	TabelaDePrecosRepositorio itemTabelaRepositorio
+	ServicoTabelaDePrecos servicoTabelaDePrecos
 
 	@Inject
 	FabricaCalculadoraItemAbstrato fabricaCalculadoraDeCritica
@@ -45,17 +45,13 @@ class GeradorDeCriticas {
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
 		List<ItemFaturado> itensFaturados = extraiItensDoArquivo(arquivo)
-		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
 		List<ItemCriticado> itemsCriticado = []
 
 		itensFaturados.each { ItemFaturado itemFaturado ->
 			CalculadoraAbstrataItem calculadora = fabricaCalculadoraDeCritica.fabricaCalculadora(itemFaturado.tipo)
-			// TODO Talvez um intermediário
-			TabelaDePrecos itemTabela = tabelaList.find {
-				it.codigo == itemFaturado.codigo
-			}
 
+			ItemTabela itemTabela = servicoTabelaDePrecos.findByCodigo(itemFaturado.codigo)
 			BigDecimal valorCalculado = calculadora.calculaValorTabela(itemTabela)
 
 			itemsCriticado.add(
@@ -79,10 +75,7 @@ class GeradorDeCriticas {
 			boolean formatar = true
 	) {
 		ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaImpressora(formatar)
-
 		String texto = impressora.montaImpressaoTodos(itemsCriticado)
-
-
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}
 

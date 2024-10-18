@@ -4,9 +4,9 @@ import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
 
 abstract class ImpressoraAbstrata {
 
-    abstract Boolean podeImprimir(Boolean valor)
+    protected static final String HEADER = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
 
-    abstract String montaImpressao(ItemCriticado itemCriticado, String texto) //@Todo Ao inves de usar String, usar Stringbuilder
+    abstract Boolean podeImprimir(Boolean valor)
 
     abstract String montaImpressaoTodos(final List<ItemCriticado> listaItems)
 

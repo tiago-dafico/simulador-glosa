@@ -1,6 +1,6 @@
 package br.com.zgsolucoes.simuladorglosa.servicos.calculadora
 
-import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemTabela
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import groovy.transform.CompileStatic
 import io.micronaut.core.annotation.Order
@@ -15,7 +15,7 @@ class CalculadoraProcedimento extends CalculadoraAbstrataItem {
 	final BigDecimal inflator = INFLATOR
 
 	@Override
-	BigDecimal calculaValorTabela(TabelaDePrecos itemTabela) {
+	BigDecimal calculaValorTabela(ItemTabela itemTabela) {
 
 		BigDecimal desconto = 0
 
