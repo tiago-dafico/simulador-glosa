@@ -3,9 +3,10 @@ package br.com.zgsolucoes.simuladorglosa
 import br.com.zgsolucoes.simuladorglosa.dominio.ResultadoCalculoItem
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 
-class CalculadoraProcedimento {
+class CalculadoraProcedimento implements Calculadora{
 
-	static ResultadoCalculoItem calcular(Dado dado, TabelaDePrecos itemTabela) {
+	@Override
+	ResultadoCalculoItem calcular(Dado dado, TabelaDePrecos itemTabela) {
 		BigDecimal valorCalculado = itemTabela.valor * 1.55
 		BigDecimal valorDado = dado.valor.toString().toBigDecimal()
 		BigDecimal valorCriticado = valorCalculado - valorDado
