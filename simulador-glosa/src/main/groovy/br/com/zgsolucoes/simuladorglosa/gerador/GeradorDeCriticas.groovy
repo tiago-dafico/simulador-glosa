@@ -1,10 +1,12 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
-import br.com.zgsolucoes.simuladorglosa.dominio.ICalculadoraDeCritica
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
 import br.com.zgsolucoes.simuladorglosa.dominio.ItemFaturado
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
-import br.com.zgsolucoes.simuladorglosa.dominio.enums.*
+import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
+import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.FabricaCalculadoraDeCritica
+import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.ICalculadoraDeCritica
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
@@ -22,7 +24,7 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	@Inject
-	List<ICalculadoraDeCritica> calculadoras
+	FabricaCalculadoraDeCritica fabricaCalculadoraDeCritica
 
 	List<ItemFaturado> extraiItensDoArquivo(File arquivo) {
 		List<ItemFaturado> itensFaturados = []
@@ -42,71 +44,43 @@ class GeradorDeCriticas {
 		List<ItemFaturado> itensFaturados = extraiItensDoArquivo(arquivo)
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
-		List<BigDecimal> calcs = []
-		List<BigDecimal> critics = []
+		List<ItemCriticado> itemsCriticado = []
 
 		itensFaturados.each { ItemFaturado dado ->
-			ICalculadoraDeCritica calculadora = calculadoras.find { it.deveAplicar(dado.tipo)}
+			ICalculadoraDeCritica calculadora = fabricaCalculadoraDeCritica.fabricaCalculadora(dado.tipo)
 			// TODO Talvez um intermediário
 			TabelaDePrecos itemTabela = tabelaList.find {
 				it.codigo == dado.codigo
 			}
 
-			BigDecimal calc = calculadora.calculaTipo(itemTabela)
-			BigDecimal valor = dado.valor.toString().toBigDecimal()
-			BigDecimal critic = calc - valor
+			BigDecimal valorCalculado = calculadora.calculaValorTabela(itemTabela)
 
-			// TODO remover para usar tipo da calc
-			if (dado.tipo == 'Procedimento') {
-				BigDecimal calc = itemTabela.valor * 1.55 // TODO calculadora.calculaTipo(valor)
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				if (dado.codigo.toString().startsWith('4')) {
-					calc -= 20
-				}
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Material') {
-				BigDecimal calc = itemTabela.valor * 1.20
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Medicamento') {
-				BigDecimal calc = itemTabela.valor * 1.30
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else if (dado.tipo == 'Taxa') {
-				BigDecimal calc = itemTabela.valor * 1.15
-				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
-				calcs.add(calc)
-				critics.add(critic)
-			} else {
-				throw new Exception('Não é de nenhum tipo')
-			}
+			itemsCriticado.push(
+					new ItemCriticado().tap {
+						codigo = dado.codigo
+						valorFaturado = dado.valor
+						it.valorCalculado = valorCalculado
+						valorCriticado = valorCalculado - dado.valor
+					}
+			)
 		}
 
-		imprima(nomeArquivo, item, calcs, critics, formatar)
+		imprima(nomeArquivo, itemsCriticado, formatar)
 
 	}
 
 	// TODO refatorar parte de importação de dados
 	void imprima(
 			String nome,
-			List<Map> dados,
-			List<BigDecimal> calcs,
-			List<BigDecimal> critics,
+			List<ItemCriticado> itemsCriticado,
 			boolean formatar = true
 	) {
 		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
-		for (int i =0 ; i< dados.size(); i++) {
+		for (int i = 0; i < dados.size(); i++) {
 			Map dado = dados[i]
 			BigDecimal calc = calcs[i]
 			BigDecimal critic = critics[i]
-			if(formatar) {
+			if (formatar) {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 				texto += dado.codigo
 				texto += ';'
@@ -128,7 +102,7 @@ class GeradorDeCriticas {
 			}
 		}
 
-		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
+		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}
 
 }
