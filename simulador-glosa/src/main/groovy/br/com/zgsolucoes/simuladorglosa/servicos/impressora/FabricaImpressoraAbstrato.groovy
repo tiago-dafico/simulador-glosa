@@ -9,14 +9,14 @@ import jakarta.inject.Singleton
 class FabricaImpressoraAbstrato {
 
 	@Inject
-	Collection<ImpressoraAbstrata> calculadoras
+	Collection<ImpressoraAbstrata> impressoras
 
-	ImpressoraAbstrata fabricaCalculadora(Boolean podeImprimir) {
-		ImpressoraAbstrata calculadora = calculadoras.find { it.podeImprimir(podeImprimir)}
-		if(!calculadora) {
+	ImpressoraAbstrata fabricaImpressora(Boolean podeImprimir) {
+		ImpressoraAbstrata impressora = impressoras.find { it.podeImprimir(podeImprimir) }
+		if(!impressora) {
 			throw new IllegalArgumentException("Erro") //@Todo Ver quais erros possiveis
 		}
-		return calculadora
+		return impressora
 	}
 
 }

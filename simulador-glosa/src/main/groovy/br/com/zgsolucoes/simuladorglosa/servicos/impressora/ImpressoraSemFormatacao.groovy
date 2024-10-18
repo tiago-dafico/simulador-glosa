@@ -1,12 +1,17 @@
 package br.com.zgsolucoes.simuladorglosa.servicos.impressora
 
 import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
+import groovy.transform.CompileStatic
+import io.micronaut.core.annotation.Order
+import jakarta.inject.Singleton
 
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
+@Order(1)
+@CompileStatic
+@Singleton
 class ImpressoraSemFormatacao extends ImpressoraAbstrata {
-	final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 
 	@Override
 	Boolean podeImprimir(Boolean valor) {
@@ -14,14 +19,7 @@ class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 	}
 
 	@Override
-	void montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
-		cabecalho += itemCriticado.codigo
-		cabecalho += ';'
-		cabecalho += valorFaturado
-		cabecalho += ';'
-		cabecalho += valorCalculado.setScale(2)
-		cabecalho += ';'
-		cabecalho += valorCriticado.setScale(2)
-		cabecalho += '\n'
+	String montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
+		"${cabecalho}${itemCriticado.codigo};${itemCriticado.valorFaturado};${itemCriticado.valorCalculado.setScale(2)};${itemCriticado.valorCriticado.setScale(2)}\n"
 	}
 }

@@ -20,8 +20,6 @@ import java.text.NumberFormat
 @Singleton
 class GeradorDeCriticas {
 
-	private static final Locale LOCALE = new Locale('pt', 'BR')
-
 	@Inject
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
@@ -84,28 +82,8 @@ class GeradorDeCriticas {
 		for (int i = 0; i < itemsCriticado.size(); i++) {
 			ItemCriticado itemCriticado = itemsCriticado[i]
 
-			ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaCalculadora(formatar)
-			impressora.montaImpressao(itemCriticado, texto)
-			if (formatar) {
-				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
-				texto += itemCriticado.codigo
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(valorFaturado)
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(valorCalculado)
-				texto += ';'
-				texto += CURRENCY_FORMAT.format(valorCriticado)
-				texto += '\n'
-			} else {
-				texto += itemCriticado.codigo
-				texto += ';'
-				texto += valorFaturado
-				texto += ';'
-				texto += valorCalculado.setScale(2)
-				texto += ';'
-				texto += valorCriticado.setScale(2)
-				texto += '\n'
-			}
+			ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaImpressora(formatar)
+			texto = impressora.montaImpressao(itemCriticado, texto)
 		}
 
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
