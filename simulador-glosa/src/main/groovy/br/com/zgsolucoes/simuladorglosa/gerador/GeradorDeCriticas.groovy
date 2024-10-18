@@ -55,7 +55,7 @@ class GeradorDeCriticas {
 
 			BigDecimal valorCalculado = calculadora.calculaValorTabela(itemTabela)
 
-			itemsCriticado.push(
+			itemsCriticado.add(
 					new ItemCriticado().tap {
 						codigo = itemFaturado.codigo
 						valorFaturado = itemFaturado.valor
