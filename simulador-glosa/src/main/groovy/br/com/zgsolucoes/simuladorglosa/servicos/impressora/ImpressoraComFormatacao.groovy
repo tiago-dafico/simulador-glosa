@@ -26,8 +26,8 @@ class ImpressoraComFormatacao extends ImpressoraAbstrata {
 			"${itemCriticado.codigo};" +
 			"${CURRENCY_FORMAT.format(itemCriticado.valorFaturado)};" +
 			"${CURRENCY_FORMAT.format(itemCriticado.valorCalculado)};" +
-			"${CURRENCY_FORMAT.format(itemCriticado.valorCriticado)}"
-		}.join('\n')
+			"${CURRENCY_FORMAT.format(itemCriticado.valorCriticado)}\n"
+		}.join('')
 
 		return HEADER + listaItemsFormatados
 	}

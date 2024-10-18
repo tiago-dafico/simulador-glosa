@@ -17,9 +17,9 @@ class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 		final String listaItemsFormatados = listaItems.collect{itemCriticado ->
 			"${itemCriticado.codigo};" +
 					"${itemCriticado.valorFaturado};" +
-					"${itemCriticado.valorCalculado};" +
-					"${itemCriticado.valorCriticado}"
-		}.join('\n')
+					"${itemCriticado.valorCalculado.setScale(2)};" +
+					"${itemCriticado.valorCriticado.setScale(2)}\n"
+		}.join('')
 
 		return HEADER + listaItemsFormatados
 	}

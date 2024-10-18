@@ -68,7 +68,6 @@ class GeradorDeCriticas {
 
 	}
 
-	// TODO refatorar parte de importação de dados
 	void imprima(
 			String nome,
 			List<ItemCriticado> itemsCriticado,
