@@ -2,8 +2,14 @@ package br.com.zgsolucoes.simuladorglosa.servicos.calculadora
 
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
+import groovy.transform.CompileStatic
+import io.micronaut.core.annotation.Order
+import jakarta.inject.Singleton
 
-class ICalculadoraProcedimento extends ICalculadoraDeCritica {
+@Order(1)
+@CompileStatic
+@Singleton
+class CalculadoraProcedimento extends CalculadoraAbstrataItem {
 	static final BigDecimal INFLATOR = 1.55
 
 	final BigDecimal inflator = INFLATOR

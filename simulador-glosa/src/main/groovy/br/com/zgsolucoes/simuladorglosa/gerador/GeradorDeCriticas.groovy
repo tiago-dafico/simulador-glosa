@@ -5,8 +5,8 @@ import br.com.zgsolucoes.simuladorglosa.dominio.ItemFaturado
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
-import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.FabricaCalculadoraDeCritica
-import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.ICalculadoraDeCritica
+import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.FabricaCalculadoraItemAbstrato
+import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.CalculadoraAbstrataItem
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
@@ -24,7 +24,7 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	@Inject
-	FabricaCalculadoraDeCritica fabricaCalculadoraDeCritica
+	FabricaCalculadoraItemAbstrato fabricaCalculadoraDeCritica
 
 	List<ItemFaturado> extraiItensDoArquivo(File arquivo) {
 		List<ItemFaturado> itensFaturados = []
@@ -46,21 +46,21 @@ class GeradorDeCriticas {
 
 		List<ItemCriticado> itemsCriticado = []
 
-		itensFaturados.each { ItemFaturado dado ->
-			ICalculadoraDeCritica calculadora = fabricaCalculadoraDeCritica.fabricaCalculadora(dado.tipo)
+		itensFaturados.each { ItemFaturado itemFaturado ->
+			CalculadoraAbstrataItem calculadora = fabricaCalculadoraDeCritica.fabricaCalculadora(itemFaturado.tipo)
 			// TODO Talvez um intermediário
 			TabelaDePrecos itemTabela = tabelaList.find {
-				it.codigo == dado.codigo
+				it.codigo == itemFaturado.codigo
 			}
 
 			BigDecimal valorCalculado = calculadora.calculaValorTabela(itemTabela)
 
 			itemsCriticado.push(
 					new ItemCriticado().tap {
-						codigo = dado.codigo
-						valorFaturado = dado.valor
+						codigo = itemFaturado.codigo
+						valorFaturado = itemFaturado.valor
 						it.valorCalculado = valorCalculado
-						valorCriticado = valorCalculado - dado.valor
+						valorCriticado = valorCalculado - itemFaturado.valor
 					}
 			)
 		}

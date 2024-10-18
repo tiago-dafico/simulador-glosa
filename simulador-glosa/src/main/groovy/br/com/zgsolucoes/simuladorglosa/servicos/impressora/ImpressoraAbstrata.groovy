@@ -1,10 +1,8 @@
 package br.com.zgsolucoes.simuladorglosa.servicos.impressora
 
-abstract class Impressora {
+abstract class ImpressoraAbstrata {
 
-    boolean podeImprimir() {
-        return true
-    }
+    abstract boolean podeImprimir()
 
     abstract String montaImpressao()
 
