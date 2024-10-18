@@ -6,6 +6,7 @@ import br.com.zgsolucoes.simuladorglosa.CalculadoraFactory
 import br.com.zgsolucoes.simuladorglosa.dominio.ResultadoCalculoItem
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.TipoItem
+import br.com.zgsolucoes.simuladorglosa.repositorios.Integrador
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -23,8 +24,8 @@ class GeradorDeCriticas {
     @Inject
     TabelaDePrecosRepositorio itemTabelaRepositorio
 
-    void gere(File arquivo, String nomeArquivo, boolean formatar) {
-        List<Dado> dados = dataParse(arquivo)
+    void gere(Integrador integrador, String nomeArquivo, boolean formatar) {
+        List<Dado> dados = integrador.busque()
 
         List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
