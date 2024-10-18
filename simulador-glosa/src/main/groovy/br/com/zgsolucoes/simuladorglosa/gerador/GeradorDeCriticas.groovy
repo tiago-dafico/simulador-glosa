@@ -2,6 +2,7 @@ package br.com.zgsolucoes.simuladorglosa.gerador
 
 import br.com.zgsolucoes.simuladorglosa.Dado
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
+import br.com.zgsolucoes.simuladorglosa.dominio.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -25,18 +26,19 @@ class GeradorDeCriticas {
 			List<String> list = it.tokenize(';')
 			Dado dado = new Dado(
 					codigo: list[0],
-					tipo: list[1],
-					valor: list[2],
+					tipo: TipoItem.valueOf(list[1]),
+					valor: list[2].toLong(),
 			)
 			dados.add(dado)
 		}
 
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
-		List<BigDecimal> calcs = []
+		List<ResultadoCalculoItem> resultados = []
 		List<BigDecimal> critics = []
 
 		dados.each { Map dado ->
+        
 			if (dado.tipo == 'Procedimento') {
 				TabelaDePrecos itemTabela = tabelaList.find {
 					it.codigo == dado.codigo
@@ -47,8 +49,7 @@ class GeradorDeCriticas {
 				if (dado.codigo.toString().startsWith('4')) {
 					calc -= 20
 				}
-				calcs.add(calc)
-				critics.add(critic)
+                resultados.add(new ResultadoCalculoItem(calc, critic))
 			} else if (dado.tipo == 'Material') {
 				TabelaDePrecos itemTabela = tabelaList.find {
 					it.codigo == dado.codigo
@@ -122,14 +123,10 @@ class GeradorDeCriticas {
 		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
 	}
 
-	private void calcular() {
-		TabelaDePrecos itemTabela = tabelaList.find {
-			it.codigo == dado.codigo
-		}
+	private void calcular(Dado dado, TabelaDePrecos itemTabela, List<ResultadoCalculoItem> resultados) {
 		BigDecimal calc = itemTabela.valor * 1.20
 		BigDecimal valor = dado.valor.toString().toBigDecimal()
 		BigDecimal critic = calc - valor
-		calcs.add(calc)
-		critics.add(critic)
+        resultados.add(new ResultadoCalculoItem(calc, critic))
 	}
 }
