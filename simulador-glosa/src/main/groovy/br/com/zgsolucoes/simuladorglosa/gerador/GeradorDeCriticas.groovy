@@ -1,5 +1,6 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemFaturado
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import jakarta.inject.Inject
@@ -19,14 +20,14 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
-		List<Map> dados = []
+		List<ItemFaturado> itensFaturados = []
 		arquivo.readLines().tail().each {
-			Map dado = [:]
+			ItemFaturado itemFaturado = [:]
 			List<String> list = it.tokenize(';')
-			dado['codigo'] = list[0]
-			dado['tipo'] = list[1]
-			dado['valor'] = list[2]
-			dados.add(dado)
+			itemFaturado.codigo = list[0]
+			itemFaturado.tipo = list[1]
+			itemFaturado.valor = list[2]
+			itensFaturados.add(itemFaturado)
 		}
 
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
@@ -34,7 +35,7 @@ class GeradorDeCriticas {
 		List<BigDecimal> calcs = []
 		List<BigDecimal> critics = []
 
-		dados.each { Map dado ->
+		itensFaturados.each { Map dado ->
 			if (dado.tipo == 'Procedimento') {
 				TabelaDePrecos itemTabela = tabelaList.find {
 					it.codigo == dado.codigo
@@ -79,7 +80,7 @@ class GeradorDeCriticas {
 			}
 		}
 
-		imprima(nomeArquivo, dados, calcs, critics, formatar)
+		imprima(nomeArquivo, item, calcs, critics, formatar)
 
 	}
 
