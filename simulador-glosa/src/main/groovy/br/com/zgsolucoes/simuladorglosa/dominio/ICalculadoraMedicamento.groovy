@@ -10,9 +10,7 @@ class ICalculadoraMedicamento extends ICalculadoraDeCritica {
 	}
 
 	@Override
-	BigDecimal calculaTipo(TipoItem tipoItem, BigDecimal valor) {
-		if (deveAplicar(tipoItem)) {
-			return valor * INFLATOR
-		}
+	BigDecimal calculaTipo(BigDecimal valor) {
+		return valor * INFLATOR
 	}
 }

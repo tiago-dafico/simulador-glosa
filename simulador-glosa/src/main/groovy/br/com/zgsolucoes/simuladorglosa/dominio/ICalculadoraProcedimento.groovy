@@ -6,7 +6,7 @@ class ICalculadoraProcedimento extends ICalculadoraDeCritica {
 	static final BigDecimal INFLATOR = 1.55
 
 	@Override
-	BigDecimal calculaTipo(TipoItem tipoItem, BigDecimal valor) {
+	BigDecimal calculaTipo(BigDecimal valor) {
 		return valor * INFLATOR
 	}
 
