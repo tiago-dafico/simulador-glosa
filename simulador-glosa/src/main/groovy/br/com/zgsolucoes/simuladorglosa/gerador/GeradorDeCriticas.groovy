@@ -33,31 +33,31 @@ class GeradorDeCriticas {
         List<ResultadoCalculoItem> resultados = []
         List<BigDecimal> critics = []
 
-        dados.each { Map dado ->
+        dados.each { Dado dado ->
 
             if (dado.tipo == TipoItem.PROCEDIMENTO) {
                 TabelaDePrecos itemTabela = tabelaList.find {
                     it.codigo == dado.codigo
                 }
-                BigDecimal calc = CalculadoraProcedimento.calcular(dado, itemTabela)
-                resultados.add(new ResultadoCalculoItem(calc, critic))
+                ResultadoCalculoItem calc = CalculadoraProcedimento.calcular(dado, itemTabela)
+                resultados.add(calc)
             } else if (dado.tipo == TipoItem.MATERIAL) {
                 TabelaDePrecos itemTabela = tabelaList.find {
                     it.codigo == dado.codigo
                 }
-                BigDecimal calc = CalculadoraMaterial.calcular(dado, itemTabela)
+                ResultadoCalculoItem calc = CalculadoraMaterial.calcular(dado, itemTabela)
                 resultados.add(calc)
             } else if (dado.tipo == TipoItem.MEDICAMENTO) {
                 TabelaDePrecos itemTabela = tabelaList.find {
                     it.codigo == dado.codigo
                 }
-                BigDecimal calc = CalculadoraMedicamento.calcular(dado, itemTabela)
+                ResultadoCalculoItem calc = CalculadoraMedicamento.calcular(dado, itemTabela)
                 resultados.add(calc)
             } else if (dado.tipo == TipoItem.TAXA) {
                 TabelaDePrecos itemTabela = tabelaList.find {
                     it.codigo == dado.codigo
                 }
-                BigDecimal calc = CalculadoraTaxa.calcular(dado, itemTabela)
+                ResultadoCalculoItem calc = CalculadoraTaxa.calcular(dado, itemTabela)
                 resultados.add(calc)
             } else {
                 throw new Exception('Não é de nenhum tipo')
@@ -70,32 +70,32 @@ class GeradorDeCriticas {
 
     void imprima(
             String nome,
-            List<Map> dados,
-            List<BigDecimal> resultados,
+            List<Dado> dados,
+            List<ResultadoCalculoItem> resultados,
             boolean formatar = true
     ) {
         String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
         for (int i = 0; i < dados.size(); i++) {
-            Map dado = dados[i]
-            BigDecimal calc = resultados[i]
+            Dado dado = dados[i]
+            ResultadoCalculoItem calc = resultados[i]
             if (formatar) {
                 final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
                 texto += dado.codigo
                 texto += ';'
                 texto += CURRENCY_FORMAT.format(dado.valor.toString().toBigDecimal())
                 texto += ';'
-                texto += CURRENCY_FORMAT.format(calc)
+                texto += CURRENCY_FORMAT.format(calc.valorCalculado)
                 texto += ';'
-                texto += CURRENCY_FORMAT.format(critic)
+                texto += CURRENCY_FORMAT.format(calc.valorCriticado)
                 texto += '\n'
             } else {
                 texto += dado.codigo
                 texto += ';'
                 texto += dado.valor
                 texto += ';'
-                texto += calc.round(2)
+                texto += calc.valorCalculado.round(2)
                 texto += ';'
-                texto += critic.round(2)
+                texto += calc.valorCriticado.round(2)
                 texto += '\n'
             }
         }
@@ -103,13 +103,13 @@ class GeradorDeCriticas {
         Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
     }
 
-    private List<Dado> dataParse(File arquivo) {
+    private static List<Dado> dataParse(File arquivo) {
         List<Dado> dados = []
         arquivo.readLines().tail().each {
             List<String> list = it.tokenize(';')
             Dado dado = new Dado(
                     codigo: list[0],
-                    tipo: TipoItem.valueOf(list[1]),
+                    tipo: TipoItem.fromValor(list[1]),
                     valor: list[2].toLong(),
             )
             dados.add(dado)
