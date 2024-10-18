@@ -7,6 +7,8 @@ class CalculadoraProcedimento {
 
 	static ResultadoCalculoItem calcular(Dado dado, TabelaDePrecos itemTabela) {
 		BigDecimal valorCalculado = itemTabela.valor * 1.55
+		BigDecimal valorDado = dado.valor.toString().toBigDecimal()
+		BigDecimal valorCriticado = valorCalculado - valorDado
 		if (dado.codigo.toString().startsWith('4')) {
 			valorCalculado -= 20
 		}

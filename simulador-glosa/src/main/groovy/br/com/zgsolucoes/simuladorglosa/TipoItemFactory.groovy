@@ -1,10 +1,8 @@
 package br.com.zgsolucoes.simuladorglosa
 
-import br.com.zgsolucoes.simuladorglosa.dominio.TipoItem
+class CalculadoraFactory {
 
-class TipoItemFactory {
-
-	Calculadora getTipoItem(String tipoItem) {
-
+	Calculadora getCalculadora(String tipoItem) {
+		return
 	}
 }
