@@ -6,6 +6,6 @@ abstract class ImpressoraAbstrata {
 
     abstract Boolean podeImprimir(Boolean valor)
 
-    abstract String montaImpressao(ItemCriticado, String texto) //@Todo Ao inves de usar String, usar Stringbuilder
+    abstract void montaImpressao(ItemCriticado itemCriticado, String texto) //@Todo Ao inves de usar String, usar Stringbuilder
 
 }

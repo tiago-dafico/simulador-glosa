@@ -85,7 +85,7 @@ class GeradorDeCriticas {
 			ItemCriticado itemCriticado = itemsCriticado[i]
 
 			ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaCalculadora(formatar)
-			impressora.montaImpressao(String texto)
+			impressora.montaImpressao(itemCriticado, texto)
 			if (formatar) {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 				texto += itemCriticado.codigo

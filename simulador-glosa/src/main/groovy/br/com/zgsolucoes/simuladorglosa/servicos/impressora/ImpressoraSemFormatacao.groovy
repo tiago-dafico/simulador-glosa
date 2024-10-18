@@ -8,14 +8,13 @@ import java.text.NumberFormat
 class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 	final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 
-
 	@Override
 	Boolean podeImprimir(Boolean valor) {
-		return valor
+		return valor == false
 	}
 
 	@Override
-	String montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
+	void montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
 		cabecalho += itemCriticado.codigo
 		cabecalho += ';'
 		cabecalho += valorFaturado
@@ -24,6 +23,5 @@ class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 		cabecalho += ';'
 		cabecalho += valorCriticado.setScale(2)
 		cabecalho += '\n'
-		return cabecalho
 	}
 }
