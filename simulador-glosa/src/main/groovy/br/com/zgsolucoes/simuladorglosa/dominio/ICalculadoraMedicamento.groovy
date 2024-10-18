@@ -2,11 +2,17 @@ package br.com.zgsolucoes.simuladorglosa.dominio
 
 import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 
-class ICalculadoraMedicamento implements ICalculadoraDeCritica{
+class ICalculadoraMedicamento extends ICalculadoraDeCritica {
 	static final BigDecimal INFLATOR = 1.30
+
+	Boolean deveAplicar(TipoItem tipoItem) {
+		tipoItem == TipoItem.MEDICAMENTO
+	}
 
 	@Override
 	BigDecimal calculaTipo(TipoItem tipoItem, BigDecimal valor) {
-		return valor * INFLATOR
+		if (deveAplicar(tipoItem)) {
+			return valor * INFLATOR
+		}
 	}
 }
