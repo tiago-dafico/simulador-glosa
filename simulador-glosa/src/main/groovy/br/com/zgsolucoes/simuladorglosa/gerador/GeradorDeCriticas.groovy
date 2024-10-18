@@ -22,11 +22,12 @@ class GeradorDeCriticas {
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
 		List<Dado> dados = []
 		arquivo.readLines().tail().each {
-			Dado dado1 = new Dado()
 			List<String> list = it.tokenize(';')
-			dado['codigo'] = list[0]
-			dado['tipo'] = list[1]
-			dado['valor'] = list[2]
+			Dado dado = new Dado(
+					codigo: list[0],
+					tipo: list[1],
+					valor: list[2],
+			)
 			dados.add(dado)
 		}
 
@@ -121,4 +122,14 @@ class GeradorDeCriticas {
 		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
 	}
 
+	private void calcular() {
+		TabelaDePrecos itemTabela = tabelaList.find {
+			it.codigo == dado.codigo
+		}
+		BigDecimal calc = itemTabela.valor * 1.20
+		BigDecimal valor = dado.valor.toString().toBigDecimal()
+		BigDecimal critic = calc - valor
+		calcs.add(calc)
+		critics.add(critic)
+	}
 }
