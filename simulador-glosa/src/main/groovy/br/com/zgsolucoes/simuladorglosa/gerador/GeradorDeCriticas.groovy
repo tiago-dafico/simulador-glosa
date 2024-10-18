@@ -41,10 +41,10 @@ class GeradorDeCriticas {
 				}
 				BigDecimal calc = itemTabela.valor * 1.55
 				BigDecimal valor = dado.valor.toString().toBigDecimal()
-				BigDecimal critic = calc - valor
 				if (dado.codigo.toString().startsWith('4')) {
 					calc -= 20
 				}
+				BigDecimal critic = calc - valor
 				calcs.add(calc)
 				critics.add(critic)
 			} else if (dado.tipo == 'Material') {
