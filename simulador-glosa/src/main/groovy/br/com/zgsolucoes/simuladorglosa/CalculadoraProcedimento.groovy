@@ -10,6 +10,6 @@ class CalculadoraProcedimento {
 		if (dado.codigo.toString().startsWith('4')) {
 			valorCalculado -= 20
 		}
-		return new ResultadoCalculoItem(valorCalculado: valorCalculado, valorCriticado: valorCalculado - itemTabela.valor)
+		return new ResultadoCalculoItem(valorCalculado: valorCalculado, valorCriticado: valorCalculado - dado.valor)
 	}
 }

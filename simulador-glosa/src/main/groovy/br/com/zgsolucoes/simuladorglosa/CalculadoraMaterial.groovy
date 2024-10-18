@@ -7,6 +7,6 @@ class CalculadoraMaterial {
 
     static ResultadoCalculoItem calcular(Dado dado, TabelaDePrecos itemTabela) {
         BigDecimal valorCalculado = itemTabela.valor * 1.20
-        return new ResultadoCalculoItem(valorCalculado: valorCalculado, valorCriticado: valorCalculado - itemTabela.valor )
+        return new ResultadoCalculoItem(valorCalculado: valorCalculado, valorCriticado: valorCalculado - dado.valor )
     }
 }
