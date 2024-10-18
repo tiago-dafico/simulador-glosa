@@ -8,4 +8,6 @@ abstract class ImpressoraAbstrata {
 
     abstract String montaImpressao(ItemCriticado itemCriticado, String texto) //@Todo Ao inves de usar String, usar Stringbuilder
 
+    abstract String montaImpressaoTodos(final List<ItemCriticado> listaItems)
+
 }

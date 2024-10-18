@@ -78,13 +78,10 @@ class GeradorDeCriticas {
 			List<ItemCriticado> itemsCriticado,
 			boolean formatar = true
 	) {
-		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
-		for (int i = 0; i < itemsCriticado.size(); i++) {
-			ItemCriticado itemCriticado = itemsCriticado[i]
+		ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaImpressora(formatar)
 
-			ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaImpressora(formatar)
-			texto = impressora.montaImpressao(itemCriticado, texto)
-		}
+		String texto = impressora.montaImpressaoTodos(itemsCriticado)
+
 
 		Files.writeString(Paths.get('src/main/resources/gerado', nome), texto)
 	}

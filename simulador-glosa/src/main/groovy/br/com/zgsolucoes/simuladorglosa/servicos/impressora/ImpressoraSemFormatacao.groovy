@@ -12,6 +12,7 @@ import java.text.NumberFormat
 @CompileStatic
 @Singleton
 class ImpressoraSemFormatacao extends ImpressoraAbstrata {
+	private static final String HEADER = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
 
 	@Override
 	Boolean podeImprimir(Boolean valor) {
@@ -21,5 +22,17 @@ class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 	@Override
 	String montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
 		"${cabecalho}${itemCriticado.codigo};${itemCriticado.valorFaturado};${itemCriticado.valorCalculado.setScale(2)};${itemCriticado.valorCriticado.setScale(2)}\n"
+	}
+
+	@Override
+	String montaImpressaoTodos(final List<ItemCriticado> listaItems) {
+		final String listaItemsFormatados = listaItems.collect{itemCriticado ->
+			"${itemCriticado.codigo};" +
+					"${itemCriticado.valorFaturado};" +
+					"${itemCriticado.valorCalculado};" +
+					"${itemCriticado.valorCriticado}"
+		}.join('\n')
+
+		return HEADER + listaItemsFormatados
 	}
 }
