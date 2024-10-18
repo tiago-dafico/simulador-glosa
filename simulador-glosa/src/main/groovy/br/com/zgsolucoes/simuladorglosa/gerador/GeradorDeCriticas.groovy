@@ -1,6 +1,7 @@
 package br.com.zgsolucoes.simuladorglosa.gerador
 
 import br.com.zgsolucoes.simuladorglosa.Dado
+import br.com.zgsolucoes.simuladorglosa.dominio.ResultadoCalculoItem
 import br.com.zgsolucoes.simuladorglosa.dominio.TabelaDePrecos
 import br.com.zgsolucoes.simuladorglosa.dominio.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
@@ -21,16 +22,7 @@ class GeradorDeCriticas {
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
 	void gere(File arquivo, String nomeArquivo, boolean formatar) {
-		List<Dado> dados = []
-		arquivo.readLines().tail().each {
-			List<String> list = it.tokenize(';')
-			Dado dado = new Dado(
-					codigo: list[0],
-					tipo: TipoItem.valueOf(list[1]),
-					valor: list[2].toLong(),
-			)
-			dados.add(dado)
-		}
+		List<Dado> dados = dataParse(arquivo)
 
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
@@ -123,10 +115,17 @@ class GeradorDeCriticas {
 		Files.writeString(Paths.get('src/main/resources/gerado',nome),texto)
 	}
 
-	private void calcular(Dado dado, TabelaDePrecos itemTabela, List<ResultadoCalculoItem> resultados) {
-		BigDecimal calc = itemTabela.valor * 1.20
-		BigDecimal valor = dado.valor.toString().toBigDecimal()
-		BigDecimal critic = calc - valor
-        resultados.add(new ResultadoCalculoItem(calc, critic))
+	private List<Dado> dataParse(File arquivo) {
+		List<Dado> dados = []
+		arquivo.readLines().tail().each {
+			List<String> list = it.tokenize(';')
+			Dado dado = new Dado(
+					codigo: list[0],
+					tipo: TipoItem.valueOf(list[1]),
+					valor: list[2].toLong(),
+			)
+			dados.add(dado)
+		}
+		return dados
 	}
 }
