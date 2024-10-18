@@ -19,7 +19,7 @@ class GeradorDeCriticas {
 	@Inject
 	TabelaDePrecosRepositorio itemTabelaRepositorio
 
-	void gere(File arquivo, String nomeArquivo, boolean formatar) {
+	List<ItemFaturado> extraiItensDoArquivo(File arquivo) {
 		List<ItemFaturado> itensFaturados = []
 		arquivo.readLines().tail().each {
 			ItemFaturado itemFaturado = [:]
@@ -30,6 +30,11 @@ class GeradorDeCriticas {
 			itensFaturados.add(itemFaturado)
 		}
 
+		return itensFaturados
+	}
+
+	void gere(File arquivo, String nomeArquivo, boolean formatar) {
+		List<ItemFaturado> itensFaturados = extraiItensDoArquivo(arquivo)
 		List<TabelaDePrecos> tabelaList = itemTabelaRepositorio.findAll()
 
 		List<BigDecimal> calcs = []
