@@ -76,28 +76,30 @@ class GeradorDeCriticas {
 			boolean formatar = true
 	) {
 		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
-		for (int i = 0; i < dados.size(); i++) {
-			Map dado = dados[i]
-			BigDecimal calc = calcs[i]
-			BigDecimal critic = critics[i]
+		for (int i = 0; i < itemsCriticado.size(); i++) {
+			ItemCriticado itemCriticado = itemsCriticado[i]
+			BigDecimal valorCalculado = itemCriticado.valorCalculado
+			BigDecimal valorCriticado = itemCriticado.valorCriticado
+			BigDecimal valorFaturado = itemCriticado.valorFaturado
+
 			if (formatar) {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
-				texto += dado.codigo
+				texto += itemCriticado.codigo
 				texto += ';'
-				texto += CURRENCY_FORMAT.format(dado.valor.toString().toBigDecimal())
+				texto += CURRENCY_FORMAT.format(valorFaturado)
 				texto += ';'
-				texto += CURRENCY_FORMAT.format(calc)
+				texto += CURRENCY_FORMAT.format(valorCalculado)
 				texto += ';'
-				texto += CURRENCY_FORMAT.format(critic)
+				texto += CURRENCY_FORMAT.format(valorCriticado)
 				texto += '\n'
 			} else {
-				texto += dado.codigo
+				texto += itemCriticado.codigo
 				texto += ';'
-				texto += dado.valor
+				texto += valorFaturado
 				texto += ';'
-				texto += calc.setScale(2)
+				texto += valorCalculado.setScale(2)
 				texto += ';'
-				texto += critic.setScale(2)
+				texto += valorCriticado.setScale(2)
 				texto += '\n'
 			}
 		}
