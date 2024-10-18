@@ -1,5 +1,7 @@
 package br.com.zgsolucoes.simuladorglosa.servicos.impressora
 
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
+
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -8,21 +10,20 @@ class ImpressoraSemFormatacao extends ImpressoraAbstrata {
 
 
 	@Override
-	boolean podeImprimir() {
-		return false
+	Boolean podeImprimir(Boolean valor) {
+		return valor
 	}
 
 	@Override
-	String montaImpressao() {
-		String texto
-		texto += itemCriticado.codigo
-		texto += ';'
-		texto += valorFaturado
-		texto += ';'
-		texto += valorCalculado.setScale(2)
-		texto += ';'
-		texto += valorCriticado.setScale(2)
-		texto += '\n'
-		return texto
+	String montaImpressao(ItemCriticado itemCriticado, String cabecalho) {
+		cabecalho += itemCriticado.codigo
+		cabecalho += ';'
+		cabecalho += valorFaturado
+		cabecalho += ';'
+		cabecalho += valorCalculado.setScale(2)
+		cabecalho += ';'
+		cabecalho += valorCriticado.setScale(2)
+		cabecalho += '\n'
+		return cabecalho
 	}
 }

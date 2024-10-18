@@ -1,9 +1,11 @@
 package br.com.zgsolucoes.simuladorglosa.servicos.impressora
 
+import br.com.zgsolucoes.simuladorglosa.dominio.ItemCriticado
+
 abstract class ImpressoraAbstrata {
 
-    abstract boolean podeImprimir()
+    abstract Boolean podeImprimir(Boolean valor)
 
-    abstract String montaImpressao()
+    abstract String montaImpressao(ItemCriticado, String texto) //@Todo Ao inves de usar String, usar Stringbuilder
 
 }

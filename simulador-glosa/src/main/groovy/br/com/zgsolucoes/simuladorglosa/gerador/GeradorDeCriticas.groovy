@@ -7,6 +7,8 @@ import br.com.zgsolucoes.simuladorglosa.dominio.enums.TipoItem
 import br.com.zgsolucoes.simuladorglosa.repositorios.TabelaDePrecosRepositorio
 import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.FabricaCalculadoraItemAbstrato
 import br.com.zgsolucoes.simuladorglosa.servicos.calculadora.CalculadoraAbstrataItem
+import br.com.zgsolucoes.simuladorglosa.servicos.impressora.FabricaImpressoraAbstrato
+import br.com.zgsolucoes.simuladorglosa.servicos.impressora.ImpressoraAbstrata
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
@@ -25,6 +27,9 @@ class GeradorDeCriticas {
 
 	@Inject
 	FabricaCalculadoraItemAbstrato fabricaCalculadoraDeCritica
+
+	@Inject
+	FabricaImpressoraAbstrato fabricaImpressoraAbstrato
 
 	List<ItemFaturado> extraiItensDoArquivo(File arquivo) {
 		List<ItemFaturado> itensFaturados = []
@@ -78,10 +83,9 @@ class GeradorDeCriticas {
 		String texto = 'Código;Valor faturado;Valor Calculado;Valor criticado\n'
 		for (int i = 0; i < itemsCriticado.size(); i++) {
 			ItemCriticado itemCriticado = itemsCriticado[i]
-			BigDecimal valorCalculado = itemCriticado.valorCalculado
-			BigDecimal valorCriticado = itemCriticado.valorCriticado
-			BigDecimal valorFaturado = itemCriticado.valorFaturado
 
+			ImpressoraAbstrata impressora = fabricaImpressoraAbstrato.fabricaCalculadora(formatar)
+			impressora.montaImpressao(String texto)
 			if (formatar) {
 				final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 				texto += itemCriticado.codigo

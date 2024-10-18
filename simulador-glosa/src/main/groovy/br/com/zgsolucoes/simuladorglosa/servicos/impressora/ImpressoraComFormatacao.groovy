@@ -7,21 +7,20 @@ class ImpressoraComFormatacao extends ImpressoraAbstrata {
 	final DecimalFormat CURRENCY_FORMAT = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE)
 
 	@Override
-	boolean podeImprimir() {
-		return false
+	Boolean podeImprimir(Boolean valor) {
+		return valor
 	}
 
 	@Override
-	String montaImpressao() {
-		String texto
-		texto += itemCriticado.codigo
-		texto += ';'
-		texto += CURRENCY_FORMAT.format(valorFaturado)
-		texto += ';'
-		texto += CURRENCY_FORMAT.format(valorCalculado)
-		texto += ';'
-		texto += CURRENCY_FORMAT.format(valorCriticado)
-		texto += '\n'
-		return texto
+	String montaImpressao(String cabecalho) {
+		cabecalho += itemCriticado.codigo
+		cabecalho += ';'
+		cabecalho += CURRENCY_FORMAT.format(valorFaturado)
+		cabecalho += ';'
+		cabecalho += CURRENCY_FORMAT.format(valorCalculado)
+		cabecalho += ';'
+		cabecalho += CURRENCY_FORMAT.format(valorCriticado)
+		cabecalho += '\n'
+		return cabecalho
 	}
 }
